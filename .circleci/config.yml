@@ -6,11 +6,12 @@ refs:
     docker:
       - image: node:12
         environment:
-          DATABASE_URL: 'postgres://test-user@localhost:5432/test-db'
+          DATABASE_URL: 'postgres://test-user:123456@localhost:5432/test-db'
       - image: postgres:12-alpine
         environment:
           POSTGRES_USER: test-user
           POSTGRES_DB: test-db
+          POSTGRES_PASSWORD: 123456
 
     working_directory: ~/repo
 
