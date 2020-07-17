@@ -4,7 +4,7 @@
   "description": "ActivityPub backend of Commune Project.",
   "main": "src/main.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "serve": "ts-node ./src/main.ts",
     "migrations:test": "node ./migrate.js"
   },
