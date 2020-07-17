@@ -111,7 +111,12 @@ describe('User authentication', ()=> {
     })
     test("Can authenticate with pbkdf2", async ()=> {
         const passwordHash = "600eb3c2888627c982d8b55f46a050fee3b1491bdf80dab8bb87669d08e04f5c:123456"
-        await db.query(sql`UPDATE actors SET data=jsonb_set(data, '{internal, passwordHash}', ${passwordHash}) WHERE data->>'preferredUsername'='misaka4e21' AND data#>>'{internal,domain}'='mc1.msknet.localdomain'`)
-        expect(authUsernamePassword(db, "misaka4e21", "mc1.msknet.localdomain", "123456")).toBe(true)
+        await db.query(sql`UPDATE actors SET data=jsonb_set(data, '{internal, passwordHash}', to_jsonb(${passwordHash}::text)) WHERE data->>'preferredUsername'='misaka4e21' AND data#>>'{internal,domain}'='mc1.msknet.localdomain'`)
+        expect(await authUsernamePassword(db, "misaka4e21", "mc1.msknet.localdomain", "123456")).not.toBe({})
     })
+})
+
+
+afterAll(async ()=> {
+    await db.dispose()
 })
