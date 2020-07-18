@@ -7,8 +7,8 @@ import DbFetcher from './db-fetcher'
 import StoredFetcher from './stored-fetcher'
 import { IObject } from 'commune-common/definitions/interfaces'
 
-export default function(id: string, db: Connection, actor?: IDbActor): Promise<IObject> {
+export default async function(id: string, db: Connection, actor?: IDbActor): Promise<IObject> {
     const dbFetcher = new DbFetcher(db)
     const storedFetcher = new StoredFetcher(db, actor)
-    return new CompositeFetcher([dbFetcher, storedFetcher]).getById(id)
+    return await new CompositeFetcher([dbFetcher, storedFetcher]).getById(id)
 }

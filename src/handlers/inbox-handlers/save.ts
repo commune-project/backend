@@ -2,10 +2,11 @@ import { IObject, isActivity, IActivity } from 'commune-common/definitions/inter
 import { sql } from '@databases/pg'
 
 import { BaseInboxHandler } from './base'
+import { insertObject } from '../../dal/asobject'
 
 export class SaveActivityHandler extends BaseInboxHandler {
     async handle(data: IActivity): Promise<IActivity> {
-        this.db.query(sql`INSERT INTO objects (data) VALUES (${data})`)
+        await insertObject(this.db, data)
         return data
     }
 }

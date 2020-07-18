@@ -4,7 +4,9 @@ import { Connection } from '@databases/pg'
 import { BaseInboxHandler, TBaseInboxHandler } from './inbox-handlers/base'
 import { CheckLocalHandler } from './inbox-handlers/check-local'
 import { checkActorFactory } from './inbox-handlers/check-actor'
+import { DiscardActivityHandler } from './inbox-handlers/save'
 import { IAuthContext } from '../interfaces/context'
+import { DispatchHandler } from './inbox-handlers/disptach'
 
 
 class InboxHandler {
@@ -13,14 +15,15 @@ class InboxHandler {
         if (isActivity(data)) {
             const handlerList: TBaseInboxHandler[] = [
                 CheckLocalHandler,
-                checkActorFactory(this.ctx)
+                checkActorFactory(this.ctx),
+                DispatchHandler
             ]
-            const handlerChain: BaseInboxHandler | null = handlerList.reverse().reduce((previous: BaseInboxHandler | null, current: TBaseInboxHandler) => {
+            const handlerChain: BaseInboxHandler | null= handlerList.reverse().reduce((previous: BaseInboxHandler | null, current: TBaseInboxHandler) => {
                 // @ts-ignore
                 return new current(this.db, previous)
             }, null)
             if (handlerChain) {
-                return await handlerChain.handle(data)
+                return await handlerChain.handle(Object.assign({}, data))
             } else {
                 return {}
             }

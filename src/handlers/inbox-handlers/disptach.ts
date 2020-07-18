@@ -19,6 +19,6 @@ export class DispatchHandler extends BaseInboxHandler {
             "Follow": FollowHandler(successor=save),
             "Accept": AcceptHandler(successor=discard),            */
         }
-        return dispatcher_table[data.type.toString()].handle(data)
+        return await dispatcher_table[data.type.toString()].handle(data)
     }
 }

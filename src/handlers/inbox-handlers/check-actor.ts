@@ -13,7 +13,7 @@ export function checkActorFactory(ctx: IAuthContext) {
 
         async handle(data: IActivity): Promise<IActivity> {
             try {
-                const actorId = asobject.getId(data)
+                const actorId = asobject.getId(data.actor)
                 if (!ctx.account || ctx.account.id !== actorId) {
                     throw new Error("Not Authenticated")
                 }

@@ -4,13 +4,15 @@ import HttpFetcher from 'commune-common/ap-fetchers/http-fetcher'
 import AuthedHttpFetcher from './authed-fetcher'
 import { IObject } from 'commune-common/definitions/interfaces'
 import { IDbActor } from '../interfaces/db-objects'
+import { insertObject } from '../dal/asobject'
+import { normalize } from 'path'
 
 export async function normalizeObject(db: Connection, aso: any): Promise<any> {
     for (const key in aso) {
         if (Object.keys(aso[key]).includes("@context") && typeof aso[key] === 'object' && aso[key].id) {
             try {
                 const obj = normalizeObject(db, aso[key])
-                await db.query(sql`INSERT INTO objects (data) VALUES (${aso[key]})`)
+                await insertObject(db, aso[key])
             } finally {
                 aso[key] = aso[key].id
             }
@@ -26,7 +28,7 @@ export default class StoredFetcher implements IAbstractFetcher {
         const httpFetcher = this.actor ? new AuthedHttpFetcher(this.actor) : new HttpFetcher()
         const aso = await httpFetcher.getById(id)
         const normalized = await normalizeObject(this.db, aso)
-        await this.db.query(sql`INSERT INTO objects (data) VALUES (${normalized})`)
+        await insertObject(this.db, normalize)
         return normalized
     }
 }
