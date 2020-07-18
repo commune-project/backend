@@ -53,30 +53,6 @@ jobs:
           command: echo "Post to slack - staging build failed"
           when: on_fail
 
-  deploy-prod:
-    <<: *container
-    steps:
-      - checkout
-      - *Install
-      - *Run_Migrations
-      - *Test
-      - run: echo "Run migrations on production db"
-      - run: echo "Deploy to production"
-      - run:
-          name: Post to Slack on FAILURE
-          command: echo "Post to slack - production build failed"
-          when: on_fail
-
-  nightly:
-    <<: *container
-    steps:
-      - checkout
-      - *Install
-      - *Test
-      - run:
-          name: Post to Slack on FAILURE
-          command: echo "Post to slack - nightly build failed"
-          when: on_fail
 
 workflows:
   version: 2
@@ -107,13 +83,3 @@ workflows:
           filters:
             branches:
               only: master
-
-  nightly:
-    triggers:
-      - schedule:
-          cron: '0 1 * * *'
-          filters:
-            branches:
-              only: master
-    jobs:
-      - nightly
