@@ -11,12 +11,13 @@
         "baseUrl": ".",
         "paths": {
             "commune-backend/*": [
-                "./src/*"
+                "src/*"
             ]
-        }
+        },
+        "moduleResolution": "node"
     },
-    "files": [
-        "./src/main.ts"
+    "exclude": [
+        "node_modules"
     ],
     "compileOnSave": false,
     "buildOnSave": false

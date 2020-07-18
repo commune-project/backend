@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import bcrypt from 'bcrypt'
 
 async function checkHash(password: string, passwordHash: string): Promise<boolean> {
-    if (passwordHash.startsWith('$2a')) {
+    if (passwordHash.startsWith('$2')) {
         return await bcrypt.compare(password, passwordHash)
     } else {
         const [hash, salt] = passwordHash.split(':')
