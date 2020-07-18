@@ -1,4 +1,4 @@
-import connect, {sql} from '@databases/pg'
+import connect, {sql, Connection, ConnectionPool} from '@databases/pg'
 import { insertObject } from 'commune-backend/dal/asobject'
 import { InboxHandler } from 'commune-backend/handlers/inbox'
 import { USERS } from '../fixtures/user'
@@ -6,7 +6,6 @@ import { IObject, IActor, IActivity } from 'commune-common/definitions/interface
 import { Context } from 'vm'
 import { IAuthContext } from 'commune-backend/interfaces/context'
 
-const db = connect(process.env["DATABASE_URL"])
 const ctx = {
     account: USERS["misaka4e21"] as IActor,
     session: {
@@ -56,9 +55,12 @@ const createExampleCorrect = {
            "https://www.w3.org/ns/activitystreams#Public"]
 }
 
-const handler = new InboxHandler(db, ctx as IAuthContext)
+let db: ConnectionPool
+let handler: InboxHandler
 
 beforeAll(async () => {
+    db = await connect(process.env["DATABASE_URL"])
+    handler = new InboxHandler(db, ctx as IAuthContext)
     await insertObject(db, USERS["misaka4e21"] as IObject)
 })
 
