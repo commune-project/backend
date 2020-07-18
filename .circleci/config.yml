@@ -38,7 +38,7 @@ jobs:
       - *Run_Migrations
       - *Test
 
-  deploy-staging:
+  build-and-test:
     <<: *container
     steps:
       - checkout
@@ -56,30 +56,9 @@ jobs:
 
 workflows:
   version: 2
-  all:
-    jobs:
-      - all:
-          filters:
-            branches:
-              ignore:
-                - master
-
   master:
     jobs:
-      - deploy-staging:
-          filters:
-            branches:
-              only: master
-      - approve-prod:
-          type: approval
-          requires:
-            - deploy-staging
-          filters:
-            branches:
-              only: master
-      - deploy-prod:
-          requires:
-            - approve-prod
+      - build-and-test:
           filters:
             branches:
               only: master
