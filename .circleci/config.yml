@@ -52,6 +52,8 @@ jobs:
           name: Post to Slack on FAILURE
           command: echo "Post to slack - staging build failed"
           when: on_fail
+      - store_artifacts:
+          path: coverage
 
 
 workflows:
