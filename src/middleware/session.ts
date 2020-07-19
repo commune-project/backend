@@ -9,7 +9,7 @@ import { isActor } from 'commune-common/definitions/interfaces'
 function mdwAuthHttpSignatures(db: Connection) {
     return async function(ctx: IAuthContext, next: () => Promise<any>) {
         try {
-            const actors = await db.query(sql`SELECT data FROM actors WHERE data->'publicKey'->>'id'=${ctx.session.account_ap_id}`)
+            const actors = await db.query(sql`SELECT data FROM actors WHERE data->>'id'=${ctx.session.account_ap_id}`)
             if (actors.length === 1) {
                 ctx.account = actors[0].data
             }

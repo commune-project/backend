@@ -6,9 +6,8 @@ import { IObject } from 'commune-common/definitions/interfaces'
 
 
 describe('User authentication', () => {
-    let db: ConnectionPool
+    const db = connect(process.env["DATABASE_URL"])
     beforeAll(async () => {
-        db = await connect(process.env["DATABASE_URL"])
         await insertObject(db, USERS["misaka4e21"] as IObject)
     })
     test("Can authenticate with pbkdf2", async () => {

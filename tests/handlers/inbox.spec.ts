@@ -2,6 +2,7 @@ import connect, {sql, Connection, ConnectionPool} from '@databases/pg'
 import { insertObject } from 'commune-backend/dal/asobject'
 import { InboxHandler } from 'commune-backend/handlers/inbox'
 import { USERS } from '../fixtures/user'
+import { createExampleCorrect } from '../fixtures/create'
 import { IObject, IActor, IActivity } from 'commune-common/definitions/interfaces'
 import { Context } from 'vm'
 import { IAuthContext } from 'commune-backend/interfaces/context'
@@ -34,33 +35,10 @@ const createExampleWrong = {
            "https://www.w3.org/ns/activitystreams#Public"]
 }
 
-const createExampleCorrect = {
-    "@context": "https://www.w3.org/ns/activitystreams",
-    "type": "Create",
-    "id": `${USERS.misaka4e21.id}/87375`,
-    "actor": USERS.misaka4e21.id,
-    "object": {
-      "id": `${USERS.misaka4e21.id}/note/73`,
-      "type": "Note",
-      "attributedTo": USERS.misaka4e21.id,
-      "content": "This is a note",
-      "published": "2015-02-10T15:04:55Z",
-      "to": ["https://example.org/~john/"],
-      "cc": ["https://example.com/~erik/followers",
-             "https://www.w3.org/ns/activitystreams#Public"]
-    },
-    "published": "2015-02-10T15:04:55Z",
-    "to": ["https://example.org/~john/"],
-    "cc": ["https://example.com/~erik/followers",
-           "https://www.w3.org/ns/activitystreams#Public"]
-}
-
-let db: ConnectionPool
-let handler: InboxHandler
+const db = connect(process.env["DATABASE_URL"])
+const handler = new InboxHandler(db, ctx as IAuthContext)
 
 beforeAll(async () => {
-    db = await connect(process.env["DATABASE_URL"])
-    handler = new InboxHandler(db, ctx as IAuthContext)
     await insertObject(db, USERS["misaka4e21"] as IObject)
 })
 
